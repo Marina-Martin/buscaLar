@@ -17,9 +17,12 @@ body {
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  /* CORREÇÃO AQUI: Força o tema claro para o projeto original */
+  background: white !important; 
+  color: black !important;
+  
+  font-family: Arial, sans-serif;
+  text-align: center; 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -31,7 +34,7 @@ body {
 }
 
 a {
-  color: inherit;
+  color: black;
   text-decoration: none;
 }
 
@@ -39,4 +42,71 @@ a {
   html {
     color-scheme: dark;
   }
+}
+
+/* ESTILOS ESPECÍFICOS DO PROJETO BUSCA LAR */
+
+/* Aplica a cor preta nas bordas, garantindo que não fiquem brancas no dark mode */
+header, footer, form, fieldset {
+  border: 2px solid black;
+  border-color: black !important;
+}
+
+/* Padding de Header e Footer */
+header, footer {
+  padding: 10px;
+}
+
+/* Estilos de Botões */
+button {
+  background: white;
+  border: 2px solid black;
+  padding: 10px 20px;
+  margin: 10px;
+  cursor: pointer;
+  background-color: white !important; /* Garante fundo branco do botão */
+  color: black !important;
+}
+
+button:hover {
+  background: black;
+  color: white;
+}
+
+/* Estilos de Formulário e Fieldset */
+form {
+  max-width: 600px;
+  margin: 20px auto;
+  text-align: left;
+  padding: 20px;
+}
+
+fieldset {
+  margin-bottom: 20px;
+  padding: 10px;
+}
+
+legend {
+  font-weight: bold;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Estilos para inputs do formulário */
+.input-control, .inputs { 
+  width: 100%;
+  /* Garante que o input também tenha fundo claro para ser visível */
+  background-color: white !important;
+  color: black !important;
+  border: 1px solid black;
+  padding: 5px;
+  margin-bottom: 10px;
+  box-sizing: border-box; 
+}
+
+textarea {
+  resize: vertical;
 }
