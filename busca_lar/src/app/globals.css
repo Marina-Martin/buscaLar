@@ -122,3 +122,27 @@ img {
   height: 150px;
   object-fit: cover; 
 }
+
+.galeria {
+  display: flex;
+  flex-wrap: wrap; /* permite quebrar linha se faltar espaço */
+  gap: 1rem; /* espaçamento entre imagens */
+  justify-content: center; /* centraliza horizontalmente */
+  margin-top: 1rem;
+}
+
+.galeria img {
+  width: 200px;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.galeria img:hover {
+  transform: scale(1.05);
+}
+
+section {
+  padding-bottom: 2rem; 
+}
