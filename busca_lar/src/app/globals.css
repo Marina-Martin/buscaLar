@@ -17,8 +17,8 @@ body {
 }
 
 body {
-  /* CORREÇÃO AQUI: Força o tema claro para o projeto original */
-  background: white !important; 
+  /* Fundo cinza claro para o corpo da página */
+  background: #f2f2f2 !important; 
   color: black !important;
   
   font-family: Arial, sans-serif;
@@ -44,9 +44,9 @@ a {
   }
 }
 
-/* ESTILOS ESPECÍFICOS DO PROJETO BUSCA LAR */
+/* ESTILOS ESPECÍFICOS DO PROJETO BUSCA LAR (Unificados) */
 
-/* Aplica a cor preta nas bordas, garantindo que não fiquem brancas no dark mode */
+/* Bordas comuns (do formsStyle.css) */
 header, footer, form, fieldset {
   border: 2px solid black;
   border-color: black !important;
@@ -64,7 +64,7 @@ button {
   padding: 10px 20px;
   margin: 10px;
   cursor: pointer;
-  background-color: white !important; /* Garante fundo branco do botão */
+  background-color: white !important; 
   color: black !important;
 }
 
@@ -73,12 +73,16 @@ button:hover {
   color: white;
 }
 
-/* Estilos de Formulário e Fieldset */
 form {
   max-width: 600px;
   margin: 20px auto;
   text-align: left;
   padding: 20px;
+  
+  /* Fundo Branco para destacar o forms */
+  background-color: white !important; 
+  /* Sombra sutil para dar destaque */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
 }
 
 fieldset {
@@ -98,7 +102,6 @@ label {
 /* Estilos para inputs do formulário */
 .input-control, .inputs { 
   width: 100%;
-  /* Garante que o input também tenha fundo claro para ser visível */
   background-color: white !important;
   color: black !important;
   border: 1px solid black;
@@ -109,4 +112,13 @@ label {
 
 textarea {
   resize: vertical;
+}
+
+/* ESTILOS PARA A GALERIA DE PETS (homeStyle.css) */
+img {
+  border: 2px solid black;
+  margin: 5px;
+  width: 150px;
+  height: 150px;
+  object-fit: cover; 
 }

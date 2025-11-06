@@ -11,10 +11,7 @@ export default function Home() {
     <Header/>
     <main>
       <section>
-        <button onClick={() => alert('Em construção')}>Busca Pet</button>
-        <a href="/forms">
-          <button>Busca Lar</button>
-        </a>
+        
       </section>
     </main>
     <Footer/>
