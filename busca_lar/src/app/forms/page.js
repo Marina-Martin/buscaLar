@@ -1,8 +1,8 @@
 'use client'; 
 
 import { useState } from 'react';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Header from '@/app/components/Header';
+import Footer from '@/app/components/Footer';
 
 export default function Forms() {
   // Estados para os campos que precisam de validação
@@ -96,6 +96,7 @@ export default function Forms() {
           </p>
         </form>
       </main>
+      {/* O Footer aqui não recebe a prop ongsContent */}
       <Footer /> 
     </>
   );
