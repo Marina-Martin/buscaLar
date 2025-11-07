@@ -12,7 +12,11 @@ export default function Header() {
       <h1><Link href="/">Busca Lar</Link></h1>
       <nav>
         <ul>
-            <button className="btn" onClick={mostrarPopup}>Busca Pet</button>
+            {pathname !== "/pets" && (
+              <Link href="/pets">
+                <button>Busca Pet</button>
+              </Link>
+          )}
             {pathname !== "/forms" && (
               <Link href="/forms">
                 <button>Busca Lar</button>

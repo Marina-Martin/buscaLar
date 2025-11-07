@@ -17,7 +17,6 @@ body {
 }
 
 body {
-  /* Fundo cinza claro para o corpo da página */
   background: #f2f2f2 !important; 
   color: black !important;
   
@@ -44,20 +43,15 @@ a {
   }
 }
 
-/* ESTILOS ESPECÍFICOS DO PROJETO BUSCA LAR (Unificados) */
-
-/* Bordas comuns (do formsStyle.css) */
 header, footer, form, fieldset {
   border: 2px solid black;
   border-color: black !important;
 }
 
-/* Padding de Header e Footer */
 header, footer {
   padding: 10px;
 }
 
-/* Estilos de Botões */
 button {
   background: white;
   border: 2px solid black;
@@ -79,9 +73,7 @@ form {
   text-align: left;
   padding: 20px;
   
-  /* Fundo Branco para destacar o forms */
   background-color: white !important; 
-  /* Sombra sutil para dar destaque */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
 }
 
@@ -99,7 +91,6 @@ label {
   margin-bottom: 5px;
 }
 
-/* Estilos para inputs do formulário */
 .input-control, .inputs { 
   width: 100%;
   background-color: white !important;
@@ -114,20 +105,19 @@ textarea {
   resize: vertical;
 }
 
-/* ESTILOS PARA A GALERIA DE PETS (homeStyle.css) */
 img {
   border: 2px solid black;
   margin: 5px;
-  width: 150px;
+  width: 150px; 
   height: 150px;
   object-fit: cover; 
 }
 
 .galeria {
   display: flex;
-  flex-wrap: wrap; /* permite quebrar linha se faltar espaço */
-  gap: 1rem; /* espaçamento entre imagens */
-  justify-content: center; /* centraliza horizontalmente */
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
   margin-top: 1rem;
 }
 
