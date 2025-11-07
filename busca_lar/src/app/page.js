@@ -1,63 +1,113 @@
-"use client";
+// app/page.js
+'use client';
 
+import { useState, useEffect } from 'react';
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import { useEffect, useState } from "react";
+import PetCard from "./components/PetCard";
+import styles from './page.module.css'; 
 
 export default function Home() {
   const [cachorros, setCachorros] = useState([]);
   const [gatos, setGatos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
+  const IMAGES_BASE_URL = process.env.NEXT_PUBLIC_IMAGES_BASE_URL || '';
 
   useEffect(() => {
-    function criarGaleria(src, alt, quantidade) {
-      const imagens = [];
-      for (let i = 0; i < quantidade; i++) {
-        imagens.push({ src, alt });
+    async function fetchData() {
+      if (!API_URL || !IMAGES_BASE_URL) {
+        setError("As variáveis de ambiente NEXT_PUBLIC_API_URL ou NEXT_PUBLIC_IMAGES_BASE_URL não estão definidas.");
+        setLoading(false);
+        return;
       }
-      return imagens;
+      try {
+        const response = await fetch(API_URL);
+        if (!response.ok) {
+          throw new Error(`Erro HTTP! Status: ${response.status}`);
+        }
+        const allPets = await response.json();
+
+        const dogs = allPets.filter(pet => pet.especie === 'cachorro').slice(0, 5);
+        const cats = allPets.filter(pet => pet.especie === 'gato').slice(0, 5);
+
+        setCachorros(dogs);
+        setGatos(cats);
+      } catch (err) {
+        setError(err.message);
+        console.error('Falha ao buscar animais para a Home:', err);
+      } finally {
+        setLoading(false);
+      }
     }
+    fetchData();
+  }, [API_URL, IMAGES_BASE_URL]);
 
-    setCachorros(
-      criarGaleria(
-        "/Cachorro.jpg",
-        "Imagem de cachorro raça beagle usando óculos de grau",
-        4
-      )
+  if (loading) {
+    return (
+      <>
+        <Header />
+        <main className={styles.container}>
+          <h2>Carregando nossos amiguinhos...</h2>
+          <p>Buscando os primeiros pets para você!</p>
+        </main>
+        <Footer />
+      </>
     );
+  }
 
-    setGatos(
-      criarGaleria(
-        "/Gato.jpg",
-        "Imagem de gato usando óculos de grau e coleira com laço vermelho em cima de um notebook",
-        4
-      )
+  if (error) {
+    return (
+      <>
+        <Header />
+        <main className={styles.container}>
+          <h2>Ops! Algo deu errado.</h2>
+          <p className={styles.errorMessage}>Ocorreu um erro ao carregar os animais: {error}</p>
+          <p>Verifique as variáveis de ambiente e a disponibilidade da API.</p>
+        </main>
+        <Footer />
+      </>
     );
-  }, []);
+  }
 
   return (
     <>
       <Header />
-      <main>
+      <h2 style={{ textAlign: 'center', marginBottom: '2rem', color: '#000000' }}>Adote um amiguinho ou cadastre para achar um lar para o que encontrou!</h2>
+      <main className={styles.container}>
         <section id="cachorros">
-          <h2>Galeria de Cachorros</h2>
-          <div className="galeria">
-            {cachorros.map((img, index) => (
-              <img key={index} src={img.src} alt={img.alt} />
-            ))}
-          </div>
+          <h3>Cachorros</h3>
+          <ul className="galeria"> 
+            {cachorros.length > 0 ? (
+              cachorros.map((pet) => (
+                <li key={pet.id}> 
+                  <PetCard pet={pet} imagesBaseUrl={IMAGES_BASE_URL} />
+                </li>
+              ))
+            ) : (
+              <p>Nenhum cachorro disponível no momento.</p>
+            )}
+          </ul>
         </section>
 
         <section id="gatos">
-          <h2>Galeria de Gatos</h2>
-          <div className="galeria">
-            {gatos.map((img, index) => (
-              <img key={index} src={img.src} alt={img.alt} />
-            ))}
-          </div>
+          <h3>Gatos</h3>
+          <ul className="galeria">
+            {gatos.length > 0 ? (
+              gatos.map((pet) => (
+                <li key={pet.id}> 
+                  <PetCard pet={pet} imagesBaseUrl={IMAGES_BASE_URL} />
+                </li>
+              ))
+            ) : (
+              <p>Nenhum gato disponível no momento.</p>
+            )}
+          </ul>
         </section>
       </main>
       <Footer />
     </>
   );
 }
-

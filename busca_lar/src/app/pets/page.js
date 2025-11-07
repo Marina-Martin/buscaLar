@@ -44,7 +44,7 @@ export default function PetSearch() {
         <Header />
         <main className={styles.container}>
           <h2>Animais Disponíveis para Adoção</h2>
-          <p>Carregando animais... 🐾</p>
+          <p>Carregando animais...</p>
         </main>
         <Footer />
       </>
