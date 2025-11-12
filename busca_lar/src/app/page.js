@@ -1,80 +1,148 @@
-// app/page.js
 'use client';
 
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import PetCard from "./components/PetCard";
-import { usePetsData } from '@/app/hooks/usePetsData'; 
-import styles from './page.module.css';
+import Header from '@/app/components/Header';
+import Footer from '@/app/components/Footer';
+import { usePetsData } from '@/app/hooks/usePetsData';
 
 export default function Home() {
-  const { allPets, loading, error, IMAGES_BASE_URL } = usePetsData();
+  const { allPets, loading, error, imageUrl } = usePetsData();
 
-  const cachorros = allPets.filter(pet => pet.especie === 'cachorro').slice(0, 5);
-  const gatos = allPets.filter(pet => pet.especie === 'gato').slice(0, 5);
-
-  if (loading) {
-    return (
-      <>
-        <Header />
-        <main className={styles.container}>
-          <h2>Carregando nossos amiguinhos...</h2>
-          <p>Buscando os primeiros pets para você! 🐶🐱</p>
-        </main>
-        <Footer />
-      </>
-    );
-  }
-
-  if (error) {
-    return (
-      <>
-        <Header />
-        <main className={styles.container}>
-          <h2>Ops! Algo deu errado.</h2>
-          <p className={styles.errorMessage}>Ocorreu um erro ao carregar os animais: {error}</p>
-          <p>Verifique as variáveis de ambiente e a disponibilidade da API.</p>
-        </main>
-        <Footer />
-      </>
-    );
-  }
+  const dogs = allPets.filter(p => p.especie === 'Cachorro');
+  const cats = allPets.filter(p => p.especie === 'Gato');
 
   return (
     <>
       <Header />
-      <h2 style={{ textAlign: 'center', marginBottom: '2rem', color: '#000000' }}>Adote um amiguinho ou cadastre para achar um lar para o que encontrou!</h2>
-      <main className={styles.container}>
-        <section id="cachorros">
-          <h3>Cachorros</h3>
-          <ul className="galeria">
-            {cachorros.length > 0 ? (
-              cachorros.map((pet) => (
-                <li key={pet.id}>
-                  <PetCard pet={pet} imagesBaseUrl={IMAGES_BASE_URL} />
-                </li>
-              ))
-            ) : (
-              <p>Nenhum cachorro disponível no momento.</p>
-            )}
-          </ul>
+
+      <main>
+        <section>
+          <h2 style={{ textAlign: 'center', marginTop: 20 }}>
+            Adote um amiguinho ou cadastre para achar um lar para o que encontrou!
+          </h2>
         </section>
 
-        <section id="gatos">
-          <h3>Gatos</h3>
-          <ul className="galeria">
-            {gatos.length > 0 ? (
-              gatos.map((pet) => (
-                <li key={pet.id}>
-                  <PetCard pet={pet} imagesBaseUrl={IMAGES_BASE_URL} />
-                </li>
-              ))
-            ) : (
-              <p>Nenhum gato disponível no momento.</p>
-            )}
-          </ul>
-        </section>
+        {loading && (
+          <section aria-live="polite">
+            <p style={{ textAlign: 'center', marginTop: 40 }}>Carregando animais...</p>
+          </section>
+        )}
+
+        {error && (
+          <section>
+            <p style={{ color: 'red', textAlign: 'center', marginTop: 40 }}>
+              Erro ao carregar a lista: {error}
+            </p>
+          </section>
+        )}
+
+        {!loading && !error && (
+          <>
+            {/* ==================== BLOCO CACHORROS ==================== */}
+            <section aria-labelledby="titulo-cachorros" style={{ marginTop: 40 }}>
+              <h3 id="titulo-cachorros" style={{ textAlign: 'center' }}>Cachorros</h3>
+
+              {dogs.length === 0 ? (
+                <p style={{ textAlign: 'center' }}>Nenhum cachorro disponível no momento.</p>
+              ) : (
+                <nav aria-label="Cachorros disponíveis">
+                  <ul
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(5, 1fr)',
+                      gap: 24,
+                      listStyle: 'none',
+                      padding: 0,
+                      margin: '24px auto',
+                      maxWidth: 1200,
+                      justifyItems: 'center',
+                    }}
+                  >
+                    {dogs.slice(0, 5).map(pet => ( // apenas 5
+                      <li key={pet.id}>
+                        <a href={`/pets/${pet.id}`} aria-label={`Abrir ${pet.nome}`}>
+                          <figure style={{ textAlign: 'center' }}>
+                            <img
+                              src={pet.foto}
+                              alt={`Foto de ${pet.nome}`}
+                              width="160"
+                              height="160"
+                              style={{
+                                objectFit: 'cover',
+                                borderRadius: 12,
+                                border: '2px solid #000',
+                              }}
+                            />
+                            <figcaption style={{ marginTop: 8 }}>
+                              <strong>{pet.nome}</strong><br />
+                              <small>{pet.cidade}/{pet.estado}</small>
+                            </figcaption>
+                          </figure>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              )}
+            </section>
+
+            {/* ==================== BLOCO GATOS ==================== */}
+            <section aria-labelledby="titulo-gatos" style={{ marginTop: 60 }}>
+              <h3 id="titulo-gatos" style={{ textAlign: 'center' }}>Gatos</h3>
+
+              {cats.length === 0 ? (
+                <p style={{ textAlign: 'center' }}>Nenhum gato disponível no momento.</p>
+              ) : (
+                <nav aria-label="Gatos disponíveis">
+                  <ul
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(5, 1fr)',
+                      gap: 24,
+                      listStyle: 'none',
+                      padding: 0,
+                      margin: '24px auto',
+                      maxWidth: 1200,
+                      justifyItems: 'center',
+                    }}
+                  >
+                    {cats.slice(0, 5).map(pet => ( // apenas 5
+                      <li key={pet.id}>
+                        <a href={`/pets/${pet.id}`} aria-label={`Abrir ${pet.nome}`}>
+                          <figure style={{ textAlign: 'center' }}>
+                            <img
+                              src={pet.foto}
+                              alt={`Foto de ${pet.nome}`}
+                              width="160"
+                              height="160"
+                              style={{
+                                objectFit: 'cover',
+                                borderRadius: 12,
+                                border: '2px solid #000',
+                              }}
+                            />
+                            <figcaption style={{ marginTop: 8 }}>
+                              <strong>{pet.nome}</strong><br />
+                              <small>{pet.cidade}/{pet.estado}</small>
+                            </figcaption>
+                          </figure>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              )}
+            </section>
+
+            {/* ==================== LINK FINAL ==================== */}
+            <section style={{ textAlign: 'center', margin: '40px 0' }}>
+              <a href="/pets" style={{ fontWeight: 'bold', textDecoration: 'none' }}>
+                Ver todos os pets →
+              </a>
+            </section>
+          </>
+        )}
       </main>
+
       <Footer />
     </>
   );

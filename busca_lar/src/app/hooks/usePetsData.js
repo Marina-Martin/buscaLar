@@ -1,37 +1,35 @@
-'use client'; 
-import { useState, useEffect } from 'react';
+'use client';
+import { useEffect, useState } from 'react';
+
+export function imageUrl(foto) {
+  if (!foto) return '';
+  // Como suas imagens agora estão no /public (raiz),
+  // basta devolver o nome do arquivo (sem barra inicial).
+  const base = (process.env.NEXT_PUBLIC_IMAGES_BASE_URL || '').replace(/\/$/, '');
+  return base ? `${base}/${foto}` : `${foto}`;
+}
 
 export function usePetsData() {
   const [allPets, setAllPets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
-  const IMAGES_BASE_URL = process.env.NEXT_PUBLIC_IMAGES_BASE_URL || '';
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || '/api/pets';
 
   useEffect(() => {
-    async function fetchData() {
-      if (!API_URL || !IMAGES_BASE_URL) {
-        setError("As variáveis de ambiente NEXT_PUBLIC_API_URL ou NEXT_PUBLIC_IMAGES_BASE_URL não estão definidas.");
-        setLoading(false);
-        return;
-      }
+    (async () => {
       try {
-        const response = await fetch(API_URL);
-        if (!response.ok) {
-          throw new Error(`Erro HTTP! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        setAllPets(data);
-      } catch (err) {
-        setError(err.message);
-        console.error('Falha ao buscar animais:', err);
+        const res = await fetch(API_URL, { cache: 'no-store' });
+        if (!res.ok) throw new Error(`Erro HTTP! Status: ${res.status}`);
+        const data = await res.json();
+        setAllPets(Array.isArray(data) ? data : []);
+      } catch (e) {
+        setError(e.message);
       } finally {
         setLoading(false);
       }
-    }
-    fetchData();
-  }, [API_URL, IMAGES_BASE_URL]); 
+    })();
+  }, [API_URL]);
 
-  return { allPets, loading, error, API_URL, IMAGES_BASE_URL };
+  return { allPets, loading, error };
 }
