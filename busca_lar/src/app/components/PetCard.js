@@ -10,13 +10,13 @@ export default function PetCard({ pet, imagesBaseUrl = '' }) {
         <img
           src={src}
           alt={`Foto de ${pet.nome}`}
-          width={140}
-          height={140}
+          width={220}
+          height={220}
           style={{
-            borderRadius: 16,
+            borderRadius: 18,
             objectFit: 'cover',
-            border: '2px solid #000',
-            padding: 4,
+            border: '3px solid #000',
+            padding: 5,
             cursor: 'pointer',
           }}
         />

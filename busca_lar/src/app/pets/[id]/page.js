@@ -1,120 +1,184 @@
 // src/app/pets/[id]/page.js
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import { PETS } from '@/app/api/pets/route'; // reuso do mock local
+import Header from '@/app/components/Header';
+import Footer from '@/app/components/Footer';
+import { PETS } from '@/app/api/pets/route';
 
-export function generateStaticParams() {
-  return PETS.map(p => ({ id: String(p.id) }));
-}
+const CONTATO = {
+  nome: 'ONG Busca Lar',
+  telefone: '(11) 99999-9999',
+  email: 'contato@buscalar.org',
+};
 
-export function generateMetadata({ params }) {
-  const pet = PETS.find(p => String(p.id) === String(params.id));
-  return { title: pet ? `${pet.nome} — Busca Lar` : 'Pet não encontrado' };
-}
+export async function generateMetadata({ params }) {
+  const id = parseInt(params.id, 10);
+  const pet = PETS.find((p) => p.id === id);
 
-export default function PetDetails({ params }) {
-  const id = Number(params.id);
-  const pet = PETS.find(p => p.id === id);
-  if (!pet) notFound();
+  if (!pet) {
+    return {
+      title: 'Pet não encontrado — Busca Lar',
+    };
+  }
 
-  // fallback de contato, caso ainda não tenha em cada pet
-  const contato = pet.contato ?? {
-    nome: 'ONG Busca Lar',
-    telefone: '(11) 99999-9999',
-    email: 'contato@buscalar.org',
+  return {
+    title: `${pet.nome} — Busca Lar`,
   };
+}
 
-  const whatsapp = `https://wa.me/55${(contato.telefone || '').replace(/\D/g, '') || '11999999999'}`;
-  const mailto = `mailto:${contato.email}?subject=Interesse em adotar ${encodeURIComponent(pet.nome)}`;
+export default function PetDetalhe({ params }) {
+  const id = parseInt(params.id, 10);
+  const pet = PETS.find((p) => p.id === id);
+
+  if (!pet) {
+    return (
+      <>
+        <Header />
+        <main
+          style={{
+            maxWidth: 900,
+            margin: '40px auto',
+            padding: '0 16px',
+          }}
+        >
+          <p>Pet não encontrado.</p>
+          <Link href="/pets" style={{ textDecoration: 'underline' }}>
+            ← Voltar para a lista de pets
+          </Link>
+        </main>
+        <Footer />
+      </>
+    );
+  }
+
+  // monta os links de contato
+  const telefoneLimpo = CONTATO.telefone.replace(/\D/g, '') || '11999999999';
+  const wa = `https://wa.me/55${telefoneLimpo}?text=${encodeURIComponent(
+    `Olá! Tenho interesse em adotar o(a) ${pet.nome}.`,
+  )}`;
+  const mail = `mailto:${CONTATO.email}?subject=${encodeURIComponent(
+    `Interesse em adotar ${pet.nome}`,
+  )}`;
 
   return (
     <>
-      <header style={{ textAlign: 'center', padding: '16px 0' }}>
-        <h1 style={{ fontSize: 28, marginBottom: 8 }}>{pet.nome}</h1>
-        <Link href="/pets" aria-label="Voltar para a lista de pets">← Voltar</Link>
-      </header>
-
+      <Header />
       <main
         style={{
           maxWidth: 960,
-          margin: '0 auto',
-          display: 'grid',
-          gridTemplateColumns: '320px 1fr',
-          gap: 24,
-          padding: '0 16px 40px',
+          margin: '40px auto 60px',
+          padding: '0 16px',
         }}
       >
-        {/* Foto e descrição */}
-        <figure>
-          <img
-            src={pet.foto}           // ex.: "Thor.jpg"
-            alt={`Foto de ${pet.nome}`}
-            width={320}
-            height={320}
-            style={{
-              width: '100%',
-              height: 320,
-              objectFit: 'cover',
-              borderRadius: 20,
-              border: '3px solid #000',
-              padding: 6,
-              background: '#fff',
-            }}
-          />
-          <figcaption style={{ marginTop: 8, color: '#444' }}>
-            {pet.descricao ?? 'Aguarda um lar com amor 💛'}
-          </figcaption>
-        </figure>
+        <header
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: 24,
+          }}
+        >
+          <h1 style={{ fontSize: 28, margin: 0 }}>{pet.nome}</h1>
 
-        {/* Infos e contato */}
-        <section>
-          <h2 style={{ marginTop: 0 }}>Informações</h2>
-          <ul style={{ lineHeight: 1.9 }}>
-            <li><b>Espécie:</b> {pet.especie}</li>
-            <li><b>Local:</b> {pet.cidade}/{pet.estado}</li>
-            <li><b>Sexo:</b> {pet.sexo}</li>
-            <li><b>Idade:</b> {pet.idadeMeses} meses</li>
-            <li><b>Porte:</b> {pet.porte}</li>
-          </ul>
+          <Link href="/pets" style={{ textDecoration: 'underline' }}>
+            ← Voltar
+          </Link>
+        </header>
 
-          <hr style={{ margin: '16px 0' }} />
+        <section
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1.2fr',
+            gap: 32,
+            alignItems: 'flex-start',
+          }}
+        >
+          {/* Coluna da imagem e descrição */}
+          <article>
+            <figure style={{ textAlign: 'center', margin: 0 }}>
+              <img
+                // AQUI está o pulo do gato: sempre na raíz do site
+                src={`/${pet.foto}`}
+                alt={`Foto de ${pet.nome}`}
+                width="260"
+                height="260"
+                style={{
+                  borderRadius: 18,
+                  objectFit: 'cover',
+                  border: '3px solid #000',
+                }}
+              />
+            </figure>
 
-          <h3>Contato do doador</h3>
-          <p style={{ lineHeight: 1.8 }}>
-            <b>Responsável:</b> {contato.nome}<br />
-            <b>Telefone:</b> {contato.telefone}<br />
-            <b>E-mail:</b> <a href={`mailto:${contato.email}`}>{contato.email}</a>
-          </p>
+            <p style={{ marginTop: 16 }}>{pet.descricao}</p>
+          </article>
 
-          {/* Botões de ação — SEM div */}
-          <nav aria-label="Ações de contato" style={{ marginTop: 16, display: 'flex', gap: 12 }}>
+          {/* Coluna das informações + contato */}
+          <section>
+            <h2 style={{ fontSize: 22, marginBottom: 12 }}>Informações</h2>
+            <ul style={{ lineHeight: 1.9 }}>
+              <li>
+                <strong>Espécie:</strong> {pet.especie}
+              </li>
+              <li>
+                <strong>Local:</strong> {pet.cidade}/{pet.estado}
+              </li>
+              <li>
+                <strong>Sexo:</strong> {pet.sexo}
+              </li>
+              <li>
+                <strong>Idade:</strong> {pet.idadeMeses} meses
+              </li>
+              <li>
+                <strong>Porte:</strong> {pet.porte}
+              </li>
+            </ul>
+
+            <hr style={{ margin: '18px 0' }} />
+
+            <h3 style={{ fontSize: 20, marginBottom: 8 }}>
+              Contato do doador
+            </h3>
+            <p>
+              <strong>Responsável:</strong> {CONTATO.nome}
+              <br />
+              <strong>Telefone:</strong> {CONTATO.telefone}
+              <br />
+              <strong>E-mail:</strong> {CONTATO.email}
+            </p>
+
+            {/* Botões de contato – sem <div> extra */}
             <a
-              href={whatsapp}
+              href={wa}
               target="_blank"
               rel="noopener noreferrer"
               style={{
                 border: '2px solid #000',
                 borderRadius: 12,
                 padding: '10px 14px',
-                textDecoration: 'none',
+                display: 'inline-block',
+                marginTop: 16,
+                marginRight: 12,
               }}
             >
               Falar no WhatsApp
             </a>
+
             <a
-              href={mailto}
+              href={mail}
               style={{
                 border: '2px solid #000',
                 borderRadius: 12,
                 padding: '10px 14px',
-                textDecoration: 'none',
+                display: 'inline-block',
+                marginTop: 16,
               }}
             >
               Enviar e-mail
             </a>
-          </nav>
+          </section>
         </section>
       </main>
+      <Footer />
     </>
   );
 }
