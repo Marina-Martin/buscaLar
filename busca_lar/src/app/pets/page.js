@@ -100,24 +100,6 @@ export default function PetsPage() {
           </fieldset>
 
           <fieldset className={styles.filterGroup}>
-            <legend>Cidade</legend>
-            <label className={styles.visuallyHidden} htmlFor="cityFilter">
-              Cidade
-            </label>
-            <select
-              id="cityFilter"
-              value={cityFilter}
-              onChange={(e) => setCityFilter(e.target.value)}
-            >
-              {cityOptions.map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt === "todas" ? "Todas" : opt}
-                </option>
-              ))}
-            </select>
-          </fieldset>
-
-          <fieldset className={styles.filterGroup}>
             <legend>Estado</legend>
             <label className={styles.visuallyHidden} htmlFor="stateFilter">
               Estado
@@ -130,6 +112,24 @@ export default function PetsPage() {
               {stateOptions.map((opt) => (
                 <option key={opt} value={opt}>
                   {opt === "todas" ? "Todos" : opt}
+                </option>
+              ))}
+            </select>
+          </fieldset>
+
+          <fieldset className={styles.filterGroup}>
+            <legend>Cidade</legend>
+            <label className={styles.visuallyHidden} htmlFor="cityFilter">
+              Cidade
+            </label>
+            <select
+              id="cityFilter"
+              value={cityFilter}
+              onChange={(e) => setCityFilter(e.target.value)}
+            >
+              {cityOptions.map((opt) => (
+                <option key={opt} value={opt}>
+                  {opt === "todas" ? "Todas" : opt}
                 </option>
               ))}
             </select>

@@ -103,7 +103,9 @@ export default function PetDetailsPage() {
 
             <p>
               <strong>Contato para adoção:</strong>{" "}
-              <a href={`mailto:${pet.emailContato}`}>{pet.emailContato}</a>
+              <a href={pet.email ? `mailto:${pet.email.replace(/"/g, "")}` : "#"}>
+                {pet.email ? pet.email.replace(/"/g, "") : "E-mail não informado"}
+              </a>
             </p>
           </section>
         </article>

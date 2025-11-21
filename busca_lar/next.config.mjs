@@ -4,10 +4,11 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'raw.githubusercontent.com',
-        port: '',
-        pathname: '/Marina-Martin/buscaLarAPI/main/fotos/**',
+        protocol: "https",
+        hostname: "raw.githubusercontent.com",
+        port: "",
+        pathname:
+          "/Marina-Martin/buscaLarAPI/refs/heads/main/fotos/**",
       },
     ],
   },
