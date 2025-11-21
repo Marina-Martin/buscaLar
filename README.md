@@ -20,6 +20,8 @@ O projeto é construído com Next.js e utiliza o App Router. A estrutura foi pen
 - `src/app/page.js`: Página inicial que exibe uma prévia de cachorros e gatos para adoção.
 - `src/app/forms/page.js`: Página com o formulário de cadastro de pets.
 - `src/app/pets/page.js`: Página de listagem completa de pets (componente `PetSearch`).
+- `src/app/pets/[id]/page.js`: Página de detalhes individuais do pet selecionado, carregando todas as informações completas da API.
+
 
 ### Estilização e Dados:
 - `src/app/globals.css`: Contém todos os estilos CSS globais do projeto.
@@ -375,3 +377,116 @@ export default function PetSearch() {
 }
 ```
 
+## 5. Expansão do Projeto: BuscaPet com Filtros
+
+A página `pets/page.js` foi ampliada e agora funciona como um catálogo completo dos animais disponíveis.  
+As principais funcionalidades adicionadas:
+
+### Filtros Dinâmicos
+A página agora permite filtrar os pets por:
+- Espécie
+- Cidade
+- Estado
+
+As opções de filtro são geradas dinamicamente com base no conteúdo da API, evitando duplicação e garantindo escalabilidade.
+
+### Renderização Reativa
+Cada filtro atualiza imediatamente a lista de animais sem a necessidade de recarregar a página.
+
+### Componentização
+A listagem usa o `PetCard`, garantindo consistência visual entre Home e BuscaPet.
+
+```
+const speciesOptions = ["todas", ...new Set(pets.map(p => p.especie))];
+const cityOptions    = ["todas", ...new Set(pets.map(p => p.cidade))];
+const stateOptions   = ["todas", ...new Set(pets.map(p => p.estado))];
+const filteredPets = pets.filter(pet => {
+  return (
+    (speciesFilter === "todas" || pet.especie === speciesFilter) &&
+    (cityFilter === "todas" || pet.cidade === cityFilter) &&
+    (stateFilter === "todas" || pet.estado === stateFilter)
+  );
+});
+```
+
+---
+
+## 6. Página de Detalhes do Pet (`/pets/[id]`)
+
+Uma nova rota dinâmica foi criada para exibir informações detalhadas de cada pet.
+
+### O que a página exibe:
+- Foto do pet (vinda da pasta `/fotos` na API)
+- Nome
+- Espécie
+- Cidade e Estado
+- Descrição
+- E-mail de contato
+- Botão de voltar para a listagem
+
+### Objetivo da página
+Oferecer ao usuário um painel completo do pet escolhido, melhorando a experiência e auxiliando o processo de adoção.
+
+### Integração com a API
+A página utiliza o mesmo hook `usePetsData` para garantir consistência entre todas as rotas.
+
+```
+<article className={styles.details}>
+  <figure>
+    <Image src={`${IMAGES_BASE_URL}/${pet.foto}`} width={320} height={320} />
+    <figcaption>{pet.nome}</figcaption>
+  </figure>
+
+  <section className={styles.info}>
+    <h2>{pet.nome}</h2>
+    <p><strong>Espécie:</strong> {pet.especie}</p>
+    <p><strong>Localização:</strong> {pet.cidade} - {pet.estado}</p>
+    <p><strong>Descrição:</strong> {pet.descricao}</p>
+  </section>
+</article>
+```
+
+---
+
+## 7. Atualizações na Página Inicial (Home)
+
+Com a evolução do projeto, a Home também foi ajustada:
+
+### Cards clicáveis
+Agora, ao clicar em qualquer pet listado na Home, o usuário é direcionado para a página de detalhes.
+
+### Uso do `Link` do Next.js
+Foi adicionado o componente `Link` envolvendo o `PetCard`, criando uma navegação fluida e sem recarregamento de página.
+
+### Padronização visual
+A Home recebeu atualizações no estilo para manter consistência com a página de busca e com a página de detalhes.
+
+---
+
+## 8. Evolução do PetCard
+
+O PetCard foi refinado para:
+
+- Exibir imagem e nome de forma padronizada,
+- Ser reutilizável na Home, na BuscaPet e em futuras páginas,
+- Garantir acessibilidade e semântica adequada,
+- Facilitar a navegação para a página de detalhes.
+
+```
+export default function PetCard({ pet, imagesBaseUrl }) {
+  return (
+    <article className="pet-card">
+      <figure>
+        <Image
+          src={`${imagesBaseUrl}/${pet.foto}`}
+          alt={pet.nome}
+          width={200}
+          height={200}
+        />
+      </figure>
+
+      <h3>{pet.nome}</h3>
+    </article>
+  );
+}
+```
